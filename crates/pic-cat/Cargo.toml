@@ -13,7 +13,7 @@ name = "pic_cat"
 default = []
 ssi = []
 idp = []
-full = ["ssi", "idp"]
+full = ["ssi", "oauth"]
 
 [dependencies]
 pic-pca = { path = "../pic-pca" }

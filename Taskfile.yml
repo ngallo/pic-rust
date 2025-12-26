@@ -23,8 +23,19 @@ tasks:
         git push origin "${VERSION}"
         echo "Tag ${VERSION} pushed successfully."
 
-    # Tools
+  # Crates
+  pca-test:
+    dir:  ./
+    cmds:
+        - cargo test --package pic-pca      
+    silent: true
 
+  pca-bench:
+    dir:  ./
+    cmds:
+        - cargo bench --package pic-pca      
+    silent: true
+  
   pic-test:
     dir:  ./
     cmds:
