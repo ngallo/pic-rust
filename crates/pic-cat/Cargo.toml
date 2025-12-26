@@ -11,10 +11,15 @@ name = "pic_cat"
 
 [features]
 default = []
-ssi = []
-idp = []
+ssi = ["dep:ssi"]
+oauth = ["dep:oauth2"]
 full = ["ssi", "oauth"]
 
 [dependencies]
 pic-pca = { path = "../pic-pca" }
 serde.workspace = true
+serde_json.workspace = true
+
+# Dipendenze opzionali
+ssi = { workspace = true, optional = true }
+oauth2 = { workspace = true, optional = true }

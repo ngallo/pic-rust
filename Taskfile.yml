@@ -35,6 +35,18 @@ tasks:
     cmds:
         - cargo bench --package pic-pca      
     silent: true
+
+  cat-test:
+    dir:  ./
+    cmds:
+        - cargo test --package pic-cat      
+    silent: true
+
+  cat-bench:
+    dir:  ./
+    cmds:
+        - cargo bench --package pic-cat      
+    silent: true
   
   pic-test:
     dir:  ./

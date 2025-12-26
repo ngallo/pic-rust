@@ -19,5 +19,5 @@ ciborium.workspace = true
 criterion = "0.5"
 
 [[bench]]
-name = "serialization"
+name = "pca_serialization"
 harness = false

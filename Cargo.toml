@@ -12,6 +12,12 @@ categories = ["authentication", "cryptography"]
 [lib]
 name = "pic"
 
+[features]
+default = []
+ssi = ["pic-cat/ssi"]
+oauth = ["pic-cat/oauth"]
+full = ["ssi", "oauth"]
+
 [workspace]
 members = ["crates/*"]
 
@@ -41,6 +47,9 @@ anyhow = "1"
 # SSI - Decentralized Identity (SpruceID)
 ssi = { version = "0.12", features = ["ed25519", "w3c"] }
 
+# OAuth
+oauth2 = "4.4"
+
 # Utilities
 chrono = "0.4"
 uuid = { version = "1", features = ["v4"] }
@@ -49,7 +58,6 @@ static-iref = "3"
 
 # Benchmark
 criterion = { version = "0.5", features = ["html_reports"] }
-
 
 [dependencies]
 pic-pca = { path = "crates/pic-pca" }
