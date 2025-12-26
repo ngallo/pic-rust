@@ -27,17 +27,6 @@ This crate provides the CAT (Causal Authority Transition) enforcement mechanism 
 
 ---
 
-## Usage
-```toml
-[dependencies]
-pic-cat = "0.1"
-```
-```rust
-use pic_cat::*;
-```
-
----
-
 ## Part of PIC Protocol
 
 This crate is part of the [PIC Protocol](https://github.com/pic-protocol/pic-rust) Rust implementation.
