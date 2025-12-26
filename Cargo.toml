@@ -16,7 +16,6 @@ name = "pic"
 members = ["crates/*"]
 
 [workspace.package]
-version = "0.0.0"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/pic-protocol/pic-protocol"
