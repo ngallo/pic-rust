@@ -2,7 +2,10 @@
 name = "pic-cat"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
+description = "CAT (Causal Authority Transition) for PIC Protocol"
 license.workspace = true
+repository.workspace = true
 
 [lib]
 name = "pic_cat"

@@ -3,6 +3,12 @@ name = "pic-protocol"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.92.0" 
+description = "PIC Protocol - Provenance Identity Continuity Protocol"
+license = "Apache-2.0"
+repository = "https://github.com/pic-protocol/pic-rust"
+documentation = "https://docs.rs/pic-protocol"
+keywords = ["authorization", "security", "distributed-systems"]
+categories = ["authorization", "cryptography"]
 
 [lib]
 name = "pic"
