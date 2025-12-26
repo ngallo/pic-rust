@@ -28,9 +28,16 @@ jobs:
 
     - name: Bump version in all Cargo.toml files
       run: |
-        sed -i "s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
+        sed -i "/\[workspace\.package\]/,/^\[/ s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
         sed -i "s/^version = \".*\"/version = \"${VERSION}\"/" crates/pic-pca/Cargo.toml
         sed -i "s/^version = \".*\"/version = \"${VERSION}\"/" crates/pic-cat/Cargo.toml
+
+    - name: Debug - Verify versions
+      run: |
+        echo "=== Expected: ${VERSION} ==="
+        grep -E "^version" Cargo.toml || true
+        grep -E "^version" crates/pic-pca/Cargo.toml || true
+        grep -E "^version" crates/pic-cat/Cargo.toml || true
 
     # Build/test PRIMA di modificare dipendenze
     - name: Build workspace
