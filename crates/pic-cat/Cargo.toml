@@ -1,0 +1,18 @@
+[package]
+name = "pic-cat"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+name = "pic_cat"
+
+[features]
+default = []
+ssi = []
+idp = []
+full = ["ssi", "idp"]
+
+[dependencies]
+pic-pca = { path = "../pic-pca" }
+serde.workspace = true
