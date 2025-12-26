@@ -1,0 +1,14 @@
+version: '3'
+
+tasks:
+  pic-test:
+    dir:  ./
+    cmds:
+          - cargo test -p pic
+    silent: true
+  pic-bench:
+    dir:  ./
+    cmds:
+          -  cargo bench -p pic
+    silent: true
+
