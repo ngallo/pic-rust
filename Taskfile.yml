@@ -28,11 +28,11 @@ tasks:
   pic-test:
     dir:  ./
     cmds:
-        - cargo test -p pic
+        - cargo test --workspace      
     silent: true
 
   pic-bench:
     dir:  ./
     cmds:
-        -  cargo bench -p pic
+        -  cargo bench --workspace      
     silent: true
