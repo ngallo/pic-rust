@@ -88,7 +88,7 @@ impl std::fmt::Display for SigningAlgorithm {
 }
 
 impl SigningAlgorithm {
-    fn to_iana(&self) -> iana::Algorithm {
+    fn to_iana(self) -> iana::Algorithm {
         match self {
             SigningAlgorithm::EdDSA => iana::Algorithm::EdDSA,
             SigningAlgorithm::ES256 => iana::Algorithm::ES256,
