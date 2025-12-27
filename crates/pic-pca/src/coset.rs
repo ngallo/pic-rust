@@ -539,7 +539,7 @@ mod tests {
         let pca = sample_pca();
 
         let signing_key = SigningKey::random(&mut OsRng);
-        let wrong_signing_key = SigningKey::random(&mut OsRng);  // <- binding
+        let wrong_signing_key = SigningKey::random(&mut OsRng); // <- binding
         let wrong_verifying_key = wrong_signing_key.verifying_key();
 
         let signed: SignedPca = CoseSigned::sign_p256(&pca, "issuer", &signing_key).unwrap();
@@ -577,7 +577,7 @@ mod tests {
         let pca = sample_pca();
 
         let signing_key = SigningKey::random(&mut OsRng);
-        let wrong_signing_key = SigningKey::random(&mut OsRng);  // <- binding
+        let wrong_signing_key = SigningKey::random(&mut OsRng); // <- binding
         let wrong_verifying_key = wrong_signing_key.verifying_key();
 
         let signed: SignedPca = CoseSigned::sign_p384(&pca, "issuer", &signing_key).unwrap();
