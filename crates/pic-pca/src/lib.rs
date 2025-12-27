@@ -15,13 +15,13 @@
  */
 
 //! PCA and PoC types for PIC Protocol
+pub mod coset;
 pub mod pca;
 pub mod poc;
-pub mod coset;
 
+pub use coset::*;
 pub use pca::*;
 pub use poc::*;
-pub use coset::*;
 
 pub fn pca_version() -> &'static str {
     env!("CARGO_PKG_VERSION")

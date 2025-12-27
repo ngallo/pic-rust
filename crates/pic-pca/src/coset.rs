@@ -19,8 +19,8 @@
 //! Provides a generic `CoseSigned<T>` wrapper for signing and verifying
 //! any CBOR-serializable payload using COSE_Sign1 envelope (RFC 9052).
 
-use coset::{iana, CborSerializable, CoseSign1, CoseSign1Builder, HeaderBuilder};
-use serde::{de::DeserializeOwned, Serialize};
+use coset::{CborSerializable, CoseSign1, CoseSign1Builder, HeaderBuilder, iana};
+use serde::{Serialize, de::DeserializeOwned};
 
 // ============================================================================
 // Core Types
@@ -141,8 +141,8 @@ where
 
     /// Deserializes a signed envelope from CBOR bytes.
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, CoseError> {
-        let inner = CoseSign1::from_slice(bytes)
-            .map_err(|e| CoseError::CoseDeserialize(e.to_string()))?;
+        let inner =
+            CoseSign1::from_slice(bytes).map_err(|e| CoseError::CoseDeserialize(e.to_string()))?;
         Ok(Self {
             inner,
             _marker: std::marker::PhantomData,
@@ -286,7 +286,9 @@ mod ed25519_impl {
 #[cfg(feature = "p256")]
 mod p256_impl {
     use super::*;
-    use p256::ecdsa::{signature::Signer, signature::Verifier, Signature, SigningKey, VerifyingKey};
+    use p256::ecdsa::{
+        Signature, SigningKey, VerifyingKey, signature::Signer, signature::Verifier,
+    };
 
     impl<T> CoseSigned<T>
     where
@@ -327,7 +329,9 @@ mod p256_impl {
 #[cfg(feature = "p384")]
 mod p384_impl {
     use super::*;
-    use p384::ecdsa::{signature::Signer, signature::Verifier, Signature, SigningKey, VerifyingKey};
+    use p384::ecdsa::{
+        Signature, SigningKey, VerifyingKey, signature::Signer, signature::Verifier,
+    };
 
     impl<T> CoseSigned<T>
     where
@@ -421,13 +425,11 @@ mod tests {
     fn test_roundtrip_bytes() {
         let pca = sample_pca();
 
-        let signed: SignedPca = CoseSigned::sign_with(
-            &pca,
-            "issuer-1",
-            SigningAlgorithm::ES256,
-            |_| Ok(vec![0xCD; 64]),
-        )
-        .unwrap();
+        let signed: SignedPca =
+            CoseSigned::sign_with(&pca, "issuer-1", SigningAlgorithm::ES256, |_| {
+                Ok(vec![0xCD; 64])
+            })
+            .unwrap();
 
         let bytes = signed.to_bytes().unwrap();
         let restored: SignedPca = CoseSigned::from_bytes(&bytes).unwrap();
@@ -439,13 +441,11 @@ mod tests {
     fn test_payload_unverified() {
         let pca = sample_pca();
 
-        let signed: SignedPca = CoseSigned::sign_with(
-            &pca,
-            "issuer",
-            SigningAlgorithm::EdDSA,
-            |_| Ok(vec![0x00; 64]),
-        )
-        .unwrap();
+        let signed: SignedPca =
+            CoseSigned::sign_with(&pca, "issuer", SigningAlgorithm::EdDSA, |_| {
+                Ok(vec![0x00; 64])
+            })
+            .unwrap();
 
         let extracted = signed.payload_unverified().unwrap();
         assert_eq!(extracted.hop, "gateway");
@@ -498,13 +498,11 @@ mod tests {
 
         let pca = sample_pca();
 
-        let signed: SignedPca = CoseSigned::sign_with(
-            &pca,
-            "issuer",
-            SigningAlgorithm::ES256,
-            |_| Ok(vec![0x00; 64]),
-        )
-        .unwrap();
+        let signed: SignedPca =
+            CoseSigned::sign_with(&pca, "issuer", SigningAlgorithm::ES256, |_| {
+                Ok(vec![0x00; 64])
+            })
+            .unwrap();
 
         let verifying_key = SigningKey::generate(&mut OsRng).verifying_key();
         let result = signed.verify_ed25519(&verifying_key);
@@ -523,8 +521,7 @@ mod tests {
         let signing_key = SigningKey::random(&mut OsRng);
         let verifying_key = signing_key.verifying_key();
 
-        let signed: SignedPca =
-            CoseSigned::sign_p256(&pca, "p256-issuer", &signing_key).unwrap();
+        let signed: SignedPca = CoseSigned::sign_p256(&pca, "p256-issuer", &signing_key).unwrap();
 
         assert_eq!(signed.algorithm(), Some(SigningAlgorithm::ES256));
 
@@ -542,7 +539,8 @@ mod tests {
         let pca = sample_pca();
 
         let signing_key = SigningKey::random(&mut OsRng);
-        let wrong_verifying_key = SigningKey::random(&mut OsRng).verifying_key();
+        let wrong_signing_key = SigningKey::random(&mut OsRng);  // <- binding
+        let wrong_verifying_key = wrong_signing_key.verifying_key();
 
         let signed: SignedPca = CoseSigned::sign_p256(&pca, "issuer", &signing_key).unwrap();
 
@@ -561,8 +559,7 @@ mod tests {
         let signing_key = SigningKey::random(&mut OsRng);
         let verifying_key = signing_key.verifying_key();
 
-        let signed: SignedPca =
-            CoseSigned::sign_p384(&pca, "p384-issuer", &signing_key).unwrap();
+        let signed: SignedPca = CoseSigned::sign_p384(&pca, "p384-issuer", &signing_key).unwrap();
 
         assert_eq!(signed.algorithm(), Some(SigningAlgorithm::ES384));
 
@@ -580,7 +577,8 @@ mod tests {
         let pca = sample_pca();
 
         let signing_key = SigningKey::random(&mut OsRng);
-        let wrong_verifying_key = SigningKey::random(&mut OsRng).verifying_key();
+        let wrong_signing_key = SigningKey::random(&mut OsRng);  // <- binding
+        let wrong_verifying_key = wrong_signing_key.verifying_key();
 
         let signed: SignedPca = CoseSigned::sign_p384(&pca, "issuer", &signing_key).unwrap();
 

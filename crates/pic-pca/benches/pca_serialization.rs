@@ -18,7 +18,7 @@
 //!
 //! Measures CBOR serialization and deserialization performance for PCA payloads.
 
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use pic_pca::{
     CatProvenance, Constraints, Executor, ExecutorBinding, ExecutorProvenance, KeyMaterial,
     PcaPayload, Provenance, TemporalConstraints,

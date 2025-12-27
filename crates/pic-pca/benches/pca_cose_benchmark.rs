@@ -18,7 +18,7 @@
 //!
 //! Measures signing and verification performance for a single PCA hop.
 
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, black_box, criterion_group, criterion_main};
 use ed25519_dalek::{Signer, SigningKey};
 use pic_pca::{CoseSigned, Executor, ExecutorBinding, PcaPayload, SignedPca};
 use rand::rngs::OsRng;

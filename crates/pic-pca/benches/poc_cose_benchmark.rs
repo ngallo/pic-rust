@@ -18,11 +18,10 @@
 //!
 //! Measures signing and verification performance for a single PoC submission.
 
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, black_box, criterion_group, criterion_main};
 use ed25519_dalek::{Signer, SigningKey};
 use pic_pca::{
-    CoseSigned, Executor, ExecutorBinding, PcaPayload, PocBuilder, PocPayload, SignedPca,
-    SignedPoc,
+    CoseSigned, Executor, ExecutorBinding, PcaPayload, PocBuilder, PocPayload, SignedPca, SignedPoc,
 };
 use rand::rngs::OsRng;
 use std::time::Instant;
