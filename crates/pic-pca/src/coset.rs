@@ -156,10 +156,10 @@ where
             .rest
             .iter()
             .find_map(|(label, value)| {
-                if let Label::Int(HEADER_CHALLENGE) = label {
-                    if let ciborium::Value::Bytes(bytes) = value {
-                        return Some(bytes.clone());
-                    }
+                if let Label::Int(HEADER_CHALLENGE) = label
+                    && let ciborium::Value::Bytes(bytes) = value
+                {
+                    return Some(bytes.clone());
                 }
                 None
             })
