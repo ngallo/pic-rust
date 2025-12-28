@@ -33,7 +33,7 @@
 use crate::pca::{Constraints, ExecutorBinding};
 use serde::{Deserialize, Serialize};
 
-/// Custom serializer for Option<Vec<u8>> with serde_bytes.
+/// Custom serializer for `Option<Vec<u8>>` with serde_bytes.
 mod optional_bytes {
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
