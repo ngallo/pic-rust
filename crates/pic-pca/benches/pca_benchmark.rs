@@ -20,8 +20,8 @@
 
 use ed25519_dalek::SigningKey;
 use pic_pca::{
-    CatProvenance, Constraints, CoseSigned, Executor, ExecutorBinding,
-    ExecutorProvenance, PcaPayload, Provenance, SignedPca, TemporalConstraints,
+    CatProvenance, Constraints, CoseSigned, Executor, ExecutorBinding, ExecutorProvenance,
+    PcaPayload, Provenance, SignedPca, TemporalConstraints,
 };
 use rand::rngs::OsRng;
 use std::time::Instant;
@@ -128,7 +128,13 @@ fn print_total(label: &str, value_ns: u64) {
     } else {
         (value_ns as f64, "ns")
     };
-    println!("  \x1b[32m{:<30} {:>10.2} {} ({:.2} µs)\x1b[0m", label, value, unit, value_ns as f64 / 1000.0);
+    println!(
+        "  \x1b[32m{:<30} {:>10.2} {} ({:.2} µs)\x1b[0m",
+        label,
+        value,
+        unit,
+        value_ns as f64 / 1000.0
+    );
 }
 
 fn bench_pca(name: &str, pca: &PcaPayload) {
@@ -152,7 +158,7 @@ fn bench_pca(name: &str, pca: &PcaPayload) {
 
     // Serialization formats
     print_section("SERIALIZATION (format comparison)");
-    
+
     let cbor_ser = bench_avg_ns(ITERATIONS, || {
         let _ = pca.to_cbor().unwrap();
     });

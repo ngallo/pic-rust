@@ -23,11 +23,11 @@
 //! - Challenge in protected header for freshness binding (PCC response)
 //! - kid used as key identifier (SPIFFE ID, DID, URL, etc.)
 
-use coset::{iana, CborSerializable, CoseSign1, CoseSign1Builder, HeaderBuilder, Label};
-use serde::{de::DeserializeOwned, Serialize};
+use coset::{CborSerializable, CoseSign1, CoseSign1Builder, HeaderBuilder, Label, iana};
+use serde::{Serialize, de::DeserializeOwned};
 
 /// Custom COSE header label for PIC challenge.
-/// 
+///
 /// Using -65537 which is in the private use range (values < -65536).
 /// This allows the challenge to be included in the protected header
 /// and covered by the COSE signature.
@@ -109,7 +109,7 @@ where
     T: Serialize + DeserializeOwned,
 {
     /// Returns the key identifier (kid) from the protected header.
-    /// 
+    ///
     /// The kid can be a SPIFFE ID, DID, URL, or any resolvable identifier
     /// that can be used to obtain the public key for verification.
     pub fn kid(&self) -> Option<String> {
@@ -122,7 +122,7 @@ where
     }
 
     /// Returns the issuer (kid) from the protected header.
-    /// 
+    ///
     /// Alias for `kid()` for backward compatibility.
     #[deprecated(since = "0.2.0", note = "Use kid() instead")]
     pub fn issuer(&self) -> Option<String> {
@@ -146,7 +146,7 @@ where
     }
 
     /// Returns the challenge from the protected header (if present).
-    /// 
+    ///
     /// The challenge is used for freshness binding in PIC PoC.
     /// It is included in the protected header and covered by the signature.
     pub fn challenge(&self) -> Option<Vec<u8>> {
@@ -242,10 +242,8 @@ where
             .key_id(kid.as_bytes().to_vec());
 
         if let Some(ch) = challenge {
-            header_builder = header_builder.value(
-                HEADER_CHALLENGE,
-                ciborium::Value::Bytes(ch.to_vec()),
-            );
+            header_builder =
+                header_builder.value(HEADER_CHALLENGE, ciborium::Value::Bytes(ch.to_vec()));
         }
 
         let protected = header_builder.build();
@@ -339,8 +337,8 @@ mod ed25519_impl {
             self.check_algorithm(SigningAlgorithm::EdDSA)?;
 
             self.verify_with(|data, sig| {
-                let signature = Signature::from_slice(sig)
-                    .map_err(|_| CoseError::InvalidSignatureLength)?;
+                let signature =
+                    Signature::from_slice(sig).map_err(|_| CoseError::InvalidSignatureLength)?;
                 verifying_key
                     .verify(data, &signature)
                     .map_err(|_| CoseError::VerificationFailed)
@@ -352,7 +350,9 @@ mod ed25519_impl {
 #[cfg(feature = "p256")]
 mod p256_impl {
     use super::*;
-    use p256::ecdsa::{signature::Signer, signature::Verifier, Signature, SigningKey, VerifyingKey};
+    use p256::ecdsa::{
+        Signature, SigningKey, VerifyingKey, signature::Signer, signature::Verifier,
+    };
 
     impl<T> CoseSigned<T>
     where
@@ -385,8 +385,8 @@ mod p256_impl {
             self.check_algorithm(SigningAlgorithm::ES256)?;
 
             self.verify_with(|data, sig| {
-                let signature = Signature::from_slice(sig)
-                    .map_err(|_| CoseError::InvalidSignatureLength)?;
+                let signature =
+                    Signature::from_slice(sig).map_err(|_| CoseError::InvalidSignatureLength)?;
                 verifying_key
                     .verify(data, &signature)
                     .map_err(|_| CoseError::VerificationFailed)
@@ -398,7 +398,9 @@ mod p256_impl {
 #[cfg(feature = "p384")]
 mod p384_impl {
     use super::*;
-    use p384::ecdsa::{signature::Signer, signature::Verifier, Signature, SigningKey, VerifyingKey};
+    use p384::ecdsa::{
+        Signature, SigningKey, VerifyingKey, signature::Signer, signature::Verifier,
+    };
 
     impl<T> CoseSigned<T>
     where
@@ -431,8 +433,8 @@ mod p384_impl {
             self.check_algorithm(SigningAlgorithm::ES384)?;
 
             self.verify_with(|data, sig| {
-                let signature = Signature::from_slice(sig)
-                    .map_err(|_| CoseError::InvalidSignatureLength)?;
+                let signature =
+                    Signature::from_slice(sig).map_err(|_| CoseError::InvalidSignatureLength)?;
                 verifying_key
                     .verify(data, &signature)
                     .map_err(|_| CoseError::VerificationFailed)
@@ -515,13 +517,11 @@ mod tests {
     fn test_challenge_none_when_not_provided() {
         let pca = sample_pca();
 
-        let signed: SignedPca = CoseSigned::sign_with(
-            &pca,
-            "issuer",
-            SigningAlgorithm::EdDSA,
-            |_| Ok(vec![0xAB; 64]),
-        )
-        .unwrap();
+        let signed: SignedPca =
+            CoseSigned::sign_with(&pca, "issuer", SigningAlgorithm::EdDSA, |_| {
+                Ok(vec![0xAB; 64])
+            })
+            .unwrap();
 
         assert!(signed.challenge().is_none());
     }

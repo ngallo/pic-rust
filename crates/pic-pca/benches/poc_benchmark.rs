@@ -20,8 +20,7 @@
 
 use ed25519_dalek::SigningKey;
 use pic_pca::{
-    CoseSigned, Executor, ExecutorBinding, PcaPayload, PocBuilder, PocPayload,
-    SignedPoc,
+    CoseSigned, Executor, ExecutorBinding, PcaPayload, PocBuilder, PocPayload, SignedPoc,
 };
 use rand::rngs::OsRng;
 use std::time::Instant;
@@ -147,7 +146,10 @@ fn bench_poc(name: &str, poc: &PocPayload) {
     print_size("COSE_Sign1 (signed)", cose_bytes.len());
     print_size("COSE_Sign1 (with challenge)", cose_challenge_bytes.len());
     print_size("COSE overhead", cose_bytes.len() - cbor_bytes.len());
-    print_size("Challenge overhead", cose_challenge_bytes.len() - cose_bytes.len());
+    print_size(
+        "Challenge overhead",
+        cose_challenge_bytes.len() - cose_bytes.len(),
+    );
 
     // Serialization formats
     print_section("SERIALIZATION (format comparison)");
@@ -197,7 +199,10 @@ fn bench_poc(name: &str, poc: &PocPayload) {
                 .unwrap();
     });
     print_metric("Serialize + Sign + Challenge", sign_challenge_time);
-    print_size("Challenge overhead time", (sign_challenge_time - sign_time) as usize);
+    print_size(
+        "Challenge overhead time",
+        (sign_challenge_time - sign_time) as usize,
+    );
 
     print_total("TOTAL", sign_challenge_time);
 

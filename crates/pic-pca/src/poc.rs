@@ -84,7 +84,11 @@ pub struct ExecutorAttestation {
     /// Proof of Possession - signature over hash(protected + payload).
     /// Present only if the attestation type requires it.
     /// The PoP binds this attestation to this specific PoC context.
-    #[serde(default, skip_serializing_if = "Option::is_none", with = "optional_bytes")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "optional_bytes"
+    )]
     pub pop: Option<Vec<u8>>,
 }
 
@@ -242,11 +246,7 @@ impl PocBuilder {
     }
 
     /// Adds an attestation without PoP.
-    pub fn attestation(
-        mut self,
-        attestation_type: impl Into<String>,
-        credential: Vec<u8>,
-    ) -> Self {
+    pub fn attestation(mut self, attestation_type: impl Into<String>, credential: Vec<u8>) -> Self {
         self.attestations
             .push(ExecutorAttestation::new(attestation_type, credential));
         self
@@ -259,8 +259,11 @@ impl PocBuilder {
         credential: Vec<u8>,
         pop: Vec<u8>,
     ) -> Self {
-        self.attestations
-            .push(ExecutorAttestation::with_pop(attestation_type, credential, pop));
+        self.attestations.push(ExecutorAttestation::with_pop(
+            attestation_type,
+            credential,
+            pop,
+        ));
         self
     }
 
@@ -321,7 +324,11 @@ mod tests {
                 }),
             },
             attestations: vec![
-                ExecutorAttestation::with_pop("spiffe_svid", vec![0x01, 0x02, 0x03], vec![0x04, 0x05, 0x06]),
+                ExecutorAttestation::with_pop(
+                    "spiffe_svid",
+                    vec![0x01, 0x02, 0x03],
+                    vec![0x04, 0x05, 0x06],
+                ),
                 ExecutorAttestation::new("tee_quote", vec![0x07, 0x08, 0x09]),
             ],
         };
@@ -427,7 +434,10 @@ mod tests {
                 executor: None,
                 constraints: None,
             },
-            attestations: vec![ExecutorAttestation::new("vp", b"eyJhbGciOiJFUzI1NiJ9...".to_vec())],
+            attestations: vec![ExecutorAttestation::new(
+                "vp",
+                b"eyJhbGciOiJFUzI1NiJ9...".to_vec(),
+            )],
         };
 
         let json = poc.to_json().unwrap();
@@ -451,6 +461,10 @@ mod tests {
         assert!(poc.find_attestation("spiffe_svid").unwrap().has_pop());
         assert!(!poc.find_attestation("vp").unwrap().has_pop());
         assert!(!poc.find_attestation("tee_quote").unwrap().has_pop());
-        assert!(poc.find_attestation("custom_attestation").unwrap().has_pop());
+        assert!(
+            poc.find_attestation("custom_attestation")
+                .unwrap()
+                .has_pop()
+        );
     }
 }

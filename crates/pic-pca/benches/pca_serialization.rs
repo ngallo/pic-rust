@@ -19,8 +19,8 @@
 //! Run with: cargo run --example pca_serialization --release
 
 use pic_pca::{
-    CatProvenance, Constraints, Executor, ExecutorBinding, ExecutorProvenance,
-    PcaPayload, Provenance, TemporalConstraints,
+    CatProvenance, Constraints, Executor, ExecutorBinding, ExecutorProvenance, PcaPayload,
+    Provenance, TemporalConstraints,
 };
 use std::time::Instant;
 
@@ -105,11 +105,19 @@ fn bench_pca(name: &str, pca: &PcaPayload) {
     let cbor_bytes = pca.to_cbor().unwrap();
     let json_bytes = pca.to_json().unwrap();
 
-    let cbor_ser = bench_avg_ns(ITERATIONS, || { let _ = pca.to_cbor().unwrap(); });
-    let json_ser = bench_avg_ns(ITERATIONS, || { let _ = pca.to_json().unwrap(); });
+    let cbor_ser = bench_avg_ns(ITERATIONS, || {
+        let _ = pca.to_cbor().unwrap();
+    });
+    let json_ser = bench_avg_ns(ITERATIONS, || {
+        let _ = pca.to_json().unwrap();
+    });
 
-    let cbor_de = bench_avg_ns(ITERATIONS, || { let _ = PcaPayload::from_cbor(&cbor_bytes).unwrap(); });
-    let json_de = bench_avg_ns(ITERATIONS, || { let _ = PcaPayload::from_json(&json_bytes).unwrap(); });
+    let cbor_de = bench_avg_ns(ITERATIONS, || {
+        let _ = PcaPayload::from_cbor(&cbor_bytes).unwrap();
+    });
+    let json_de = bench_avg_ns(ITERATIONS, || {
+        let _ = PcaPayload::from_json(&json_bytes).unwrap();
+    });
 
     let cbor_rt = cbor_ser + cbor_de;
     let json_rt = json_ser + json_de;
@@ -120,26 +128,50 @@ fn bench_pca(name: &str, pca: &PcaPayload) {
     println!("\x1b[33m{}\x1b[0m", "=".repeat(50));
 
     println!();
-    println!("Payload: {} bytes CBOR -> {} bytes JSON", cbor_bytes.len(), json_bytes.len());
+    println!(
+        "Payload: {} bytes CBOR -> {} bytes JSON",
+        cbor_bytes.len(),
+        json_bytes.len()
+    );
 
     println!();
     println!("\x1b[36mCBOR\x1b[0m");
     println!("    Serialize               {}", format_time(cbor_ser));
     println!("    Deserialize             {}", format_time(cbor_de));
-    println!("    \x1b[32mROUNDTRIP               {} ({:.2} µs)\x1b[0m", format_time(cbor_rt), cbor_rt as f64 / 1000.0);
+    println!(
+        "    \x1b[32mROUNDTRIP               {} ({:.2} µs)\x1b[0m",
+        format_time(cbor_rt),
+        cbor_rt as f64 / 1000.0
+    );
 
     println!();
     println!("\x1b[36mJSON\x1b[0m");
     println!("    Serialize               {}", format_time(json_ser));
     println!("    Deserialize             {}", format_time(json_de));
-    println!("    \x1b[32mROUNDTRIP               {} ({:.2} µs)\x1b[0m", format_time(json_rt), json_rt as f64 / 1000.0);
+    println!(
+        "    \x1b[32mROUNDTRIP               {} ({:.2} µs)\x1b[0m",
+        format_time(json_rt),
+        json_rt as f64 / 1000.0
+    );
 
     println!();
     println!("\x1b[36mComparison (JSON/CBOR ratio)\x1b[0m");
-    println!("    Size                    {:.1}x", json_bytes.len() as f64 / cbor_bytes.len() as f64);
-    println!("    Serialize               {:.1}x", json_ser as f64 / cbor_ser as f64);
-    println!("    Deserialize             {:.1}x", json_de as f64 / cbor_de as f64);
-    println!("    Roundtrip               {:.1}x", json_rt as f64 / cbor_rt as f64);
+    println!(
+        "    Size                    {:.1}x",
+        json_bytes.len() as f64 / cbor_bytes.len() as f64
+    );
+    println!(
+        "    Serialize               {:.1}x",
+        json_ser as f64 / cbor_ser as f64
+    );
+    println!(
+        "    Deserialize             {:.1}x",
+        json_de as f64 / cbor_de as f64
+    );
+    println!(
+        "    Roundtrip               {:.1}x",
+        json_rt as f64 / cbor_rt as f64
+    );
 }
 
 fn main() {
