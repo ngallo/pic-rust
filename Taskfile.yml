@@ -3,31 +3,11 @@ version: '3'
 tasks:
   # Source code quality
 
-  source:fmt:
+  fmt:
     desc: Format the source code using rustfmt
     silent: true
     cmds:
       - cargo fmt --all
-
-  source:tag:push:
-    desc: Create and push a git tag interactively
-    silent: true
-    interactive: true
-    cmds:
-      - |
-        echo ""
-        echo "Enter release version (e.g., v0.0.1):"
-        read VERSION
-        echo "Enter tag message/description:"
-        read MESSAGE
-        if git rev-parse "${VERSION}" >/dev/null 2>&1; then
-          echo "Tag ${VERSION} already exists. Deleting local and remote..."
-          git tag -d "${VERSION}" >/dev/null 2>&1 || true
-          git push --delete origin "${VERSION}" >/dev/null 2>&1 || true
-        fi
-        git tag -a "${VERSION}" -m "${MESSAGE}"
-        git push origin "${VERSION}"
-        echo "Tag ${VERSION} pushed successfully."
 
   # Crates
   pca-test:
